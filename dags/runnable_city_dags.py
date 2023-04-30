@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from data_models.metro_area import MetroArea
 from operators.fetch_weather_operator import FetchAirQualityOperator, FetchPrecipitationOperator
@@ -13,8 +13,8 @@ boston = MetroArea("USA", "Massachusetts", "Boston", 42.36, -71.06)
 la = MetroArea("USA", "California", "Los Angeles", 34.05, -118.24)
 sf = MetroArea("USA", "California", "San Francisco", 37.77, -122.42)
 dc = MetroArea("USA", "Washington, D.C.", "Washington", 38.90, -77.04)
-
-metro_areas = [nyc, boston, la, sf, dc]
+denver = MetroArea("USA", "Colorado", "Denver", 39.74, -104.98)
+metro_areas = [nyc, boston, la, sf, dc, denver]
 
 with DAG(
     dag_id="Running_DAG",
@@ -22,7 +22,7 @@ with DAG(
     schedule= "@daily",
     catchup=False,
     default_args={
-        
+        "retries": 2
     }
 ) as dag:
 
