@@ -19,7 +19,7 @@ metro_areas = [nyc, boston, la, sf, dc, denver]
 with DAG(
     dag_id="Running_DAG",
     start_date= datetime(2023,1,1),
-    schedule= "@daily",
+    schedule= "0 12 * * *",
     catchup=False,
     default_args={
         "retries": 2
