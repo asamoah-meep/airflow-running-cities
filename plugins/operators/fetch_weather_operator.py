@@ -1,11 +1,12 @@
 import requests
 import logging
-
 from datetime import timedelta
-from data_models.metro_area import MetroArea
+
+from data_models import MetroArea
 from util import constants
 
 from airflow.models import BaseOperator, Variable as AirflowVariable
+from airflow.utils.context import Context
 from airflow.exceptions import AirflowFailException
 from airflow.triggers.temporal import TimeDeltaTrigger
 
@@ -26,7 +27,7 @@ class BaseFetchWeatherOperator(BaseOperator):
     def defer_when_throttled(self, response):
         raise NotImplemented("Base Weather class cannot defer")
 
-    def execute(self, context, event=None):
+    def execute(self, context: Context, event=None):
         if event:
             logging.info("Task resumed at " + str(event))
         payload = self.build_payload()

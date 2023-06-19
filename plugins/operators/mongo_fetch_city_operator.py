@@ -1,7 +1,8 @@
 from airflow.models import BaseOperator
 from airflow.providers.mongo.hooks.mongo import MongoHook
+from airflow.utils.context import Context
 
-from data_models.metro_area import MetroArea
+from data_models import MetroArea
 
 class MongoFetchCityOperator(BaseOperator):
 
@@ -20,7 +21,7 @@ class MongoFetchCityOperator(BaseOperator):
             return MongoHook(self.conn_id)
         return self.hook
     
-    def execute(self, context):
+    def execute(self, context: Context):
         record = self.get_hook().find(
             mongo_collection='MajorCity',
             mongo_db='RunnableCities',

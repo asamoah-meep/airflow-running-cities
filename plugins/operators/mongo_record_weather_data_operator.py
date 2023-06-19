@@ -1,7 +1,8 @@
 from airflow.models import BaseOperator
 from airflow.providers.mongo.hooks.mongo import MongoHook
+from airflow.utils.context import Context
 
-from data_models.metro_area import MetroArea
+from data_models import MetroArea
 
 class MongoRecordWeatherDataOperator(BaseOperator):
 
@@ -20,7 +21,7 @@ class MongoRecordWeatherDataOperator(BaseOperator):
             return MongoHook(self.conn_id)
         return self.hook
     
-    def execute(self, context):
+    def execute(self, context: Context):
         task_instance = context['ti']
         air_quality_data = task_instance.xcom_pull(task_ids = f'{self.metro_area.city_name}_requirements.{self.metro_area.city_name}_air_quality')
         precipitation_data = task_instance.xcom_pull(task_ids = f'{self.metro_area.city_name}_requirements.{self.metro_area.city_name}_precipitation')

@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from data_models.metro_area import MetroArea
-from operators.fetch_weather_operator import FetchAirQualityOperator, FetchPrecipitationOperator
-from operators.mongo_fetch_city_operator import MongoFetchCityOperator
-from operators.mongo_record_weather_data_operator import MongoRecordWeatherDataOperator
+from data_models import MetroArea
+from operators import FetchAirQualityOperator, \
+    FetchPrecipitationOperator, MongoFetchCityOperator, MongoRecordWeatherDataOperator
 
 from airflow import DAG
 from airflow.utils.task_group import TaskGroup
