@@ -7,13 +7,15 @@ from operators import FetchAirQualityOperator, \
 from airflow import DAG
 from airflow.utils.task_group import TaskGroup
 
+#TODO: Move to dynamically fetch from DB
 nyc = MetroArea("USA", "New York", "New York City", 40.71, -74.01)
 boston = MetroArea("USA", "Massachusetts", "Boston", 42.36, -71.06)
 la = MetroArea("USA", "California", "Los Angeles", 34.05, -118.24)
 sf = MetroArea("USA", "California", "San Francisco", 37.77, -122.42)
-dc = MetroArea("USA", "Washington, D.C.", "Washington", 38.90, -77.04)
+dc = MetroArea("USA", "District of Columbia", "Washington, D.C.", 38.90, -77.04)
 denver = MetroArea("USA", "Colorado", "Denver", 39.74, -104.98)
-metro_areas = [nyc, boston, la, sf, dc, denver]
+miami = MetroArea("USA", "Florida", "Miami", 25.79, -80.22)
+metro_areas = [nyc, boston, la, sf, dc, denver, miami]
 
 with DAG(
     dag_id="Running_DAG",

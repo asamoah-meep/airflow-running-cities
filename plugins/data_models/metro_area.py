@@ -10,4 +10,4 @@ class MetroArea:
 
     @property
     def city_name(self):
-        return self.city.lower().replace(' ', '_')
+        return self.city.lower().replace(' ', '_').replace(",", "").replace(".", "")

@@ -1,1 +1,1 @@
-from metro_area import MetroArea
+from data_models.metro_area import MetroArea
