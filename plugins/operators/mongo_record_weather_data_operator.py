@@ -37,12 +37,12 @@ class MongoRecordWeatherDataOperator(BaseOperator):
             'cloud_cover': precipitation_data['cloudcover'],
             'visibility': precipitation_data['visibility']
         }
-        print(record)
 
-        record_id = self.get_hook().insert_one(
+        record_id = str(self.get_hook().insert_one(
             mongo_collection='WeatherReport',
             mongo_db='RunnableCities',
             doc = record
-        ).inserted_id
+        ).inserted_id)
 
-        return str(record_id)
+        task_instance.xcom_push(self.metro_area.city_name, record_id)
+        return record_id
