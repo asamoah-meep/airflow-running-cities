@@ -1,3 +1,5 @@
+import logging
+
 from airflow.models import BaseOperator
 from airflow.providers.mongo.hooks.mongo import MongoHook
 from airflow.utils.context import Context
@@ -32,7 +34,8 @@ class MongoFetchCityOperator(BaseOperator):
             },
             find_one=True
         )
-        print(record)
+        logging.info(record)
+        #TODO: Remove this logic as we fetch all city data from DB
         reduced_record = {
             "city": self.metro_area.city,
             "park_accessibility": record['park_accessibility'],

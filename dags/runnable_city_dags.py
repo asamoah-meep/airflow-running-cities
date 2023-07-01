@@ -5,17 +5,17 @@ from operators import (FetchAirQualityOperator, CustomEmailOperator,
     FetchPrecipitationOperator, MongoFetchCityOperator, MongoRecordWeatherDataOperator)
 
 from airflow import DAG
+from airflow.models.variable import Variable
 from airflow.utils.task_group import TaskGroup
 
-#TODO: Move to dynamically fetch from DB
-nyc = MetroArea("USA", "New York", "New York City", 40.71, -74.01)
-boston = MetroArea("USA", "Massachusetts", "Boston", 42.36, -71.06)
-la = MetroArea("USA", "California", "Los Angeles", 34.05, -118.24)
-sf = MetroArea("USA", "California", "San Francisco", 37.77, -122.42)
-dc = MetroArea("USA", "District of Columbia", "Washington, D.C.", 38.90, -77.04)
-denver = MetroArea("USA", "Colorado", "Denver", 39.74, -104.98)
-miami = MetroArea("USA", "Florida", "Miami", 25.79, -80.22)
-metro_areas = [nyc, boston, la, sf, dc, denver, miami]
+import pymongo
+
+mongo_client = pymongo.MongoClient(Variable.get("MONGO_CONNECTION"))
+cities_db = mongo_client[Variable.get("MONGO_DATABASE")]
+cities_collection = cities_db[Variable.get("MONGO_COLLECTION")]
+
+all_metro_areas = list(cities_collection.find())
+metro_areas = list(map(lambda m:MetroArea(m['country'], m['state'], m['city'], m['latitude'], m['longitude']), all_metro_areas))
 
 with DAG(
     dag_id="Running_DAG",
