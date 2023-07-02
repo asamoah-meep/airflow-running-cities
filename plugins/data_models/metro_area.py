@@ -7,6 +7,9 @@ class MetroArea:
     city: str
     latitude: float
     longitude: float
+    park_accessibility: int
+    park_density: int
+    robbery_index: int
 
     @property
     def city_name(self):

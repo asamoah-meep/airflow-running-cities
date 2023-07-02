@@ -1,4 +1,3 @@
 from operators.fetch_weather_operator import BaseFetchWeatherOperator, FetchPrecipitationOperator, FetchAirQualityOperator
-from operators.mongo_fetch_city_operator import MongoFetchCityOperator
 from operators.mongo_record_weather_data_operator import MongoRecordWeatherDataOperator
 from operators.custom_email_operator import CustomEmailOperator

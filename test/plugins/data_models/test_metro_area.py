@@ -10,5 +10,5 @@ class TestMetroArea:
         ("city. with. punctuation", "city_with_punctuation")
     ])
     def test_city_name(self, city_name, expected):
-        metro_area = MetroArea(Mock(),Mock(),city_name, Mock(), Mock())
+        metro_area = MetroArea(Mock(),Mock(),city_name, Mock(), Mock(), Mock(), Mock(), Mock())
         assert metro_area.city_name == expected
