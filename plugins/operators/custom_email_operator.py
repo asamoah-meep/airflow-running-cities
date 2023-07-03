@@ -15,7 +15,7 @@ class CustomEmailOperator(BaseOperator):
 
         task_instance: TaskInstance = context["ti"]
         date = context["logical_date"].strftime('%x')
-        success_map: dict[str, bool] = { city_name: bool(task_instance.xcom_pull(task_ids=f'{city_name}_weather_report', key=city_name, default=None))
+        success_map: dict[str, bool] = { city_name: bool(task_instance.xcom_pull(task_ids=f'{city_name}_flow.{city_name}_weather_report', key=city_name, default=None))
             for city_name in self.city_names }
 
         dag_status = "Success" if all(success_map.values()) else "Failure"

@@ -23,8 +23,8 @@ class MongoRecordWeatherDataOperator(BaseOperator):
     
     def execute(self, context: Context):
         task_instance = context['ti']
-        air_quality_data = task_instance.xcom_pull(task_ids = f'{self.metro_area.city_name}_requirements.{self.metro_area.city_name}_air_quality')
-        precipitation_data = task_instance.xcom_pull(task_ids = f'{self.metro_area.city_name}_requirements.{self.metro_area.city_name}_precipitation')
+        air_quality_data = task_instance.xcom_pull(task_ids = f'{self.metro_area.city_name}_flow.{self.metro_area.city_name}_requirements.{self.metro_area.city_name}_air_quality')
+        precipitation_data = task_instance.xcom_pull(task_ids = f'{self.metro_area.city_name}_flow.{self.metro_area.city_name}_requirements.{self.metro_area.city_name}_precipitation')
 
         record = {
             'city': self.metro_area.city,
