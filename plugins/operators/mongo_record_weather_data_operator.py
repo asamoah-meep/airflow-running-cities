@@ -1,3 +1,4 @@
+from typing import Optional
 from airflow.models import BaseOperator
 from airflow.providers.mongo.hooks.mongo import MongoHook
 from airflow.utils.context import Context
@@ -7,7 +8,7 @@ from data_models import MetroArea
 class MongoRecordWeatherDataOperator(BaseOperator):
 
     conn_id: str
-    hook: MongoHook|None
+    hook: Optional[MongoHook]
     metro_area: MetroArea
 
     def __init__(self, conn_id, metro_area, **kwargs):
