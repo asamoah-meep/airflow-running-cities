@@ -6,6 +6,7 @@ from operators import CreatePlotOperator
 
 from airflow import DAG
 from airflow.models.variable import Variable
+from airflow.timetables.trigger import CronTriggerTimetable
 from airflow.utils.task_group import TaskGroup
 
 helper = MetroAreaHelper(
@@ -19,7 +20,7 @@ metro_areas: list[MetroArea] = helper.fetch_all_metro_areas()
 with DAG(
     dag_id="Report_DAG",
     start_date= datetime(2023,1,1),
-    schedule= "0 13 1 * *",
+    schedule= CronTriggerTimetable("0 13 1 * *",timezone="UTC"),
     catchup=False,
     default_args={
         "retries": 2,

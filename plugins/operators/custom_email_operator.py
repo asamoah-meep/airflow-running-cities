@@ -1,3 +1,5 @@
+import logging
+
 from airflow.models import TaskInstance
 from airflow.models.baseoperator import BaseOperator
 from airflow.operators.email import EmailOperator
@@ -21,11 +23,9 @@ class CustomEmailOperator(BaseOperator):
         dag_status = "Success" if all(success_map.values()) else "Failure"
         subject = f"{date} Dag Run {dag_status}"
 
-        print(self.city_names)
         city_status_set = set(map(lambda city_name: f"{city_name} {'succeeded' if success_map[city_name] else 'failed'} on {date}", self.city_names))
-        print(city_status_set)
         content = '\n'.join(city_status_set)
-        print(content)
+        logging.info(content)
 
         email_op = EmailOperator(
             task_id = "send_email",
@@ -34,3 +34,4 @@ class CustomEmailOperator(BaseOperator):
             html_content = content
         )
         email_op.execute(context)
+        task_instance.xcom_push("Task status", dag_status)

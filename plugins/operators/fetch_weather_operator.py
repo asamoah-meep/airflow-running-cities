@@ -19,13 +19,13 @@ class BaseFetchWeatherOperator(BaseOperator):
         super().__init__(**kwargs)
 
     def build_payload(self):
-        raise NotImplemented("Base Weather class cannot make api calls")
+        raise NotImplementedError("Base Weather class cannot make api calls")
 
     def build_record(self, response):
-        raise NotImplemented("Base Weather class cannot make api calls")
+        raise NotImplementedError("Base Weather class cannot make api calls")
     
     def defer_when_throttled(self, response):
-        raise NotImplemented("Base Weather class cannot defer")
+        raise NotImplementedError("Base Weather class cannot defer")
 
     def execute(self, context: Context, event=None):
         if event:
@@ -82,7 +82,7 @@ class FetchAirQualityOperator(BaseFetchWeatherOperator):
             logging.info("Request throttled, deferring")
             self.defer(trigger=TimeDeltaTrigger(timedelta(seconds=15)), method_name="execute")
         else:
-            raise Exception
+            raise Exception(response_data['message'])
 
     def build_payload(self):
         return {

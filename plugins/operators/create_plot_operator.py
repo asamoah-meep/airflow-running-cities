@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 from datetime import datetime, timedelta
 from data_models import MetroArea
@@ -35,11 +36,9 @@ class CreatePlotOperator(BaseOperator):
         return self.hook
 
     def execute(self, context: Context):
-        print(self.cities)
-
         city_data = {city: self.map_city_record(city) for city in self.cities}
         
-        print(city_data)
+        logging.info(city_data)
         
         fig = go.Figure()
         for city in city_data:
@@ -55,7 +54,9 @@ class CreatePlotOperator(BaseOperator):
 
         fig.show()
         p_start_date = self.report_start_date.strftime('%b %y')
-        fig.write_image(f"{self.metric}_{p_start_date}_.pdf")
+
+        logging.info(f"Writing output to reports/{self.metric}_{p_start_date}.pdf")
+        fig.write_image(f"reports/{self.metric}_{p_start_date}_.pdf")
 
     def map_city_record(self, city):
         return list(self.get_hook().find(

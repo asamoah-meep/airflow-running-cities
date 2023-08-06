@@ -7,6 +7,7 @@ from operators import (FetchAirQualityOperator, CustomEmailOperator,
 
 from airflow import DAG
 from airflow.models.variable import Variable
+from airflow.timetables.trigger import CronTriggerTimetable
 from airflow.utils.task_group import TaskGroup
 
 helper = MetroAreaHelper(
@@ -20,7 +21,7 @@ metro_areas: list[MetroArea] = helper.fetch_all_metro_areas()
 with DAG(
     dag_id="Running_DAG",
     start_date= datetime(2023,1,1),
-    schedule= "0 12 * * *",
+    schedule= CronTriggerTimetable("0 12 * * *", timezone='UTC'),
     catchup=False,
     default_args={
         "retries": 2,
