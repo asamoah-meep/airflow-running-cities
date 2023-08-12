@@ -1,8 +1,6 @@
 name: Airflow Running Cities
 
-on: 
-  push: 
-    branches: [ "main" ]
+on: [push]
 
 jobs: 
   build:
@@ -10,4 +8,5 @@ jobs:
 
     steps:
       - name: PyTest Unit tests
-        run: | pytest test
+        run: | 
+          pytest test
