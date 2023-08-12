@@ -1,0 +1,12 @@
+name: Airflow Running Cities
+
+on: [push]
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: PyTest Unit tests
+        run: | 
+          pytest test
