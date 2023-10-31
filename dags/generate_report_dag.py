@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from helpers import MetroAreaHelper
 from data_models import MetroArea
@@ -16,11 +16,10 @@ helper = MetroAreaHelper(
 )
 
 metro_areas: list[MetroArea] = helper.fetch_all_metro_areas()
-
 with DAG(
     dag_id="Report_DAG",
     start_date= datetime(2023,1,1),
-    schedule= CronTriggerTimetable("0 13 1 * *",timezone="UTC"),
+    schedule= CronTriggerTimetable("0 13 1 * *",timezone="America/New_York"),
     catchup=False,
     default_args={
         "retries": 2,

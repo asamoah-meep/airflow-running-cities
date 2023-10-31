@@ -9,6 +9,7 @@ from airflow import DAG
 from airflow.models.variable import Variable
 from airflow.timetables.trigger import CronTriggerTimetable
 from airflow.utils.task_group import TaskGroup
+from airflow.utils.edgemodifier import Label
 
 helper = MetroAreaHelper(
     mongo_client=Variable.get("MONGO_CONNECTION"),
@@ -21,7 +22,7 @@ metro_areas: list[MetroArea] = helper.fetch_all_metro_areas()
 with DAG(
     dag_id="Running_DAG",
     start_date= datetime(2023,1,1),
-    schedule= CronTriggerTimetable("0 12 * * *", timezone='UTC'),
+    schedule= CronTriggerTimetable("0 12 * * *", timezone='America/New_York'),
     catchup=False,
     default_args={
         "retries": 2,
@@ -36,7 +37,7 @@ with DAG(
                 precipitation_operator = FetchPrecipitationOperator(task_id = f'{metro_area.city_name}_precipitation', metro_area=metro_area)
             
             weather_report_operator = MongoRecordWeatherDataOperator(task_id = f'{metro_area.city_name}_weather_report', conn_id='mongo_default', metro_area = metro_area)
-            fetch_data_operators >> weather_report_operator
+            fetch_data_operators >> Label("Aggregate API data") >> weather_report_operator
 
     all_metro_area_groups = list(filter(lambda g: "_flow" in g.group_id, dag.task_group_dict.values()))
-    all_metro_area_groups >> CustomEmailOperator(task_id = "send_email", city_names=list(map(lambda m: m.city_name, metro_areas)))
+    all_metro_area_groups >> Label("Send status") >> CustomEmailOperator(task_id = "send_email", trigger_rule="all_done", city_names=list(map(lambda m: m.city_name, metro_areas)))

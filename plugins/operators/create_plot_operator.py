@@ -5,7 +5,7 @@ from data_models import MetroArea
 
 from util import constants
 
-from airflow.models import BaseOperator, Variable as AirflowVariable
+from airflow.models import BaseOperator
 from airflow.utils.context import Context
 from airflow.providers.mongo.hooks.mongo import MongoHook
 
@@ -36,8 +36,8 @@ class CreatePlotOperator(BaseOperator):
         return self.hook
 
     def execute(self, context: Context):
-        city_data = {city: self.map_city_record(city) for city in self.cities}
-        
+        logging.info(f"Fetching reporting data from {str(self.report_start_date)} - {str(self.report_end_date)}")
+        city_data = self.map_cities_record()
         logging.info(city_data)
         
         fig = go.Figure()
@@ -55,15 +55,16 @@ class CreatePlotOperator(BaseOperator):
         fig.show()
         p_start_date = self.report_start_date.strftime('%b %y')
 
-        logging.info(f"Writing output to reports/{self.metric}_{p_start_date}.pdf")
-        fig.write_image(f"reports/{self.metric}_{p_start_date}_.pdf")
-
-    def map_city_record(self, city):
-        return list(self.get_hook().find(
+        logging.info(f"Writing output to {self.metric}_{p_start_date}.pdf")
+        fig.write_image(f"{self.metric}_{p_start_date}.pdf")
+    
+    def map_cities_record(self):
+        city_names_query = list(map(lambda c:{"city": c}, self.cities))
+        city_records = list(self.get_hook().find(
             mongo_collection='WeatherReport',
             mongo_db='RunnableCities',
             query = {
-                "city": city,
+                "$or": city_names_query,
                 "timestamp": {
                     "$gt": self.report_start_date.strftime('%Y-%m-%d'),
                     "$lt": self.report_end_date.strftime('%Y-%m-%d')
@@ -72,6 +73,14 @@ class CreatePlotOperator(BaseOperator):
             projection={
                 "timestamp": 1,
                 self.metric: 1,
+                "city": 1,
                 "_id": 0
             }
         ))
+
+        record_map = {}
+        for r in city_records:
+            if r['city'] not in record_map:
+                record_map[r['city']] = []
+            r['city'].append({'timestamp': r['timestamp'], self.metric: r[self.metric]})
+        return record_map
