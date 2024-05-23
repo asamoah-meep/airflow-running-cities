@@ -1,1 +1,1 @@
-from helpers.metro_area_helper import MetroAreaHelper
+from helpers.metro_area_helper import MetroAreaHelper, MetroAreaHelperV2

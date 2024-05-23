@@ -1,0 +1,8 @@
+*.pyc
+.vscode/settings.json
+test/pytest.ini
+plugins/db_connection_settings.py
+dags/local.txt
+*.pdf
+plotly_test.py
+test.py
